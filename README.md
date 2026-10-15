@@ -7,9 +7,11 @@ Projet Objective-C ARC sans Substrate ni dépendance tierce. Sortie attendue :
 
 Les sources, tests et workflow sont fournis. Le Bundle ID de test configuré par
 défaut est `com.tonnom.obdtest`. Aucun IPA n'a été fourni.
-L'environnement de création est Windows sans Xcode/SDK Apple : **aucune dylib n'a
-été compilée ici et les tests Objective-C n'ont pas été exécutés ici**.
-Le workflow doit être exécuté sur GitHub pour obtenir le binaire réel.
+La bibliothèque a été compilée sur le runner macOS de GitHub Actions :
+[build réussi](https://github.com/Msoumaya2019/TestOverrides/actions/runs/38723772586).
+Le ZIP livré contient `build/TestOverrides.dylib` et ses rapports. Plateforme vérifiée :
+iOS réel, arm64, iOS 13 minimum, SDK 18.5. Les 14 vérifications JSON passent sur macOS.
+SHA-256 : `25e992a9397d96016dab86b3cdd5bd9c6b3fb9680c1f5973ba86060e36b2d2ee`.
 La compatibilité avec votre application n'a pas encore été vérifiée.
 
 ## Informations à fournir
@@ -54,7 +56,7 @@ Les builds automatiques ciblent également `com.tonnom.obdtest` par défaut.
 La variable de dépôt `TARGET_BUNDLE_ID` permet de choisir un autre identifiant
 pour votre application personnelle. Les vérifications de plateforme échouent si
 la sortie n'est pas iOS réel. SHA256 et rapport de vérification accompagnent le binaire.
-Ce workflow est fourni mais n'a pas été exécuté depuis cette session.
+Ce workflow a été exécuté avec succès pour `com.tonnom.obdtest`.
 
 ## Interception et limites précises
 
