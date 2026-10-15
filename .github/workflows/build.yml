@@ -1,0 +1,51 @@
+name: Build TestOverrides iPhoneOS arm64
+on:
+  workflow_dispatch:
+    inputs:
+      bundle_id:
+        description: Exact Bundle ID of your personal test app
+        required: true
+        default: com.tonnom.obdtest
+        type: string
+  push:
+    paths:
+      - 'Sources/**'
+      - 'Tests/**'
+      - 'Scripts/**'
+      - '.github/workflows/build.yml'
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 15
+    env:
+      TARGET_BUNDLE_ID: ${{ inputs.bundle_id || vars.TARGET_BUNDLE_ID || 'com.tonnom.obdtest' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect installed Xcode
+        run: |
+          xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-path
+      - name: Run JSON tests when Bundle ID is not configured
+        if: env.TARGET_BUNDLE_ID == ''
+        run: bash Scripts/build.sh --test-only
+      - name: Compile and verify real-device library
+        if: env.TARGET_BUNDLE_ID != ''
+        run: bash Scripts/build.sh
+      - name: Upload iOS library and verification
+        if: env.TARGET_BUNDLE_ID != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: TestOverrides-ios-arm64
+          if-no-files-found: error
+          path: |
+            build/TestOverrides.dylib
+            build/verification.txt
+            build/tests.txt
+            build/target-bundle-id.txt
+            build/SHA256SUMS.txt
+      - name: Explain missing configuration
+        if: env.TARGET_BUNDLE_ID == ''
+        run: echo 'JSON tests only. Run workflow_dispatch with bundle_id to produce the dylib.'
